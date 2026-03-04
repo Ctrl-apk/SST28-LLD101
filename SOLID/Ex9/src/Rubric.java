@@ -1,3 +1,5 @@
-public class Rubric {
-    public final int bonus = 28;
+public class Rubric implements RubricStrategy{
+    public int bonus(){
+        return 28;
+    }
 }
