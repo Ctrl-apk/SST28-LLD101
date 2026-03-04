@@ -1,21 +1,22 @@
 public class ClubConsole {
-    private final BudgetLedger ledger;
-    private final MinutesBook minutes;
-    private final EventPlanner events;
+    private final BudgetTracker treasurer;
+    private final MinutesStrategy secretary;
+    private final EventCreationStrategy lead;
+    private final EventTracker tracker;
 
-    public ClubConsole(BudgetLedger ledger, MinutesBook minutes, EventPlanner events) {
-        this.ledger = ledger; this.minutes = minutes; this.events = events;
+    public ClubConsole(BudgetTracker treasurer, MinutesStrategy secretary, EventCreationStrategy lead, EventTracker tracker) {
+        this.treasurer = treasurer;
+        this.secretary = secretary;
+        this.lead = lead;
+        this.tracker = tracker;
     }
 
     public void run() {
-        ClubAdminTools treasurer = new TreasurerTool(ledger);
-        ClubAdminTools secretary = new SecretaryTool(minutes);
-        ClubAdminTools lead = new EventLeadTool(events);
 
         treasurer.addIncome(5000, "sponsor");
         secretary.addMinutes("Meeting at 5pm");
         lead.createEvent("HackNight", 2000);
 
-        System.out.println("Summary: ledgerBalance=" + ledger.balanceInt() + ", minutes=" + minutes.count() + ", events=" + lead.getEventsCount());
+        System.out.println("Summary: ledgerBalance=" + treasurer.balanceInt() + ", minutes=" + secretary.count() + ", events=" + tracker.getEventsCount());
     }
 }

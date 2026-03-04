@@ -5,7 +5,11 @@ public class Main {
         MinutesBook minutes = new MinutesBook();
         EventPlanner events = new EventPlanner();
 
-        ClubConsole console = new ClubConsole(ledger, minutes, events);
+        BudgetTracker treasurer = new TreasurerTool(ledger);
+        MinutesStrategy secretary = new SecretaryTool(minutes);
+        EventLeadTool eventLead = new EventLeadTool(events);
+
+        ClubConsole console = new ClubConsole(treasurer,secretary,eventLead,eventLead);
         console.run();
     }
 }
