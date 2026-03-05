@@ -1,6 +1,7 @@
 package com.example.tickets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,31 +23,31 @@ public class TicketService {
         if (reporterEmail == null || !reporterEmail.contains("@")) throw new IllegalArgumentException("email invalid");
         if (title == null || title.trim().isEmpty()) throw new IllegalArgumentException("title required");
 
-        IncidentTicket t = new IncidentTicket(id, reporterEmail, title);
+        List<String> tags = List.of("NEW");
 
-        // BAD: mutating after creation
-        t.setPriority("MEDIUM");
-        t.setSource("CLI");
-        t.setCustomerVisible(false);
-
-        List<String> tags = new ArrayList<>();
-        tags.add("NEW");
-        t.setTags(tags);
+        IncidentTicket t = new IncidentTicket.Builder()
+                .priority("MEDIUM")
+                .source("CLI")
+                .customerVisible(false)
+                .tags(tags)
+                .build();
 
         return t;
     }
 
-    public void escalateToCritical(IncidentTicket t) {
+    public IncidentTicket escalateToCritical(IncidentTicket t) {
         // BAD: mutating ticket after it has been "created"
-        t.setPriority("CRITICAL");
-        t.getTags().add("ESCALATED"); // list leak
+        return t.toBuilder().
+                priority("CRITICAL")
+                .tags(Collections.singletonList("ESCALATED")) // list leak
+                .build();
     }
 
-    public void assign(IncidentTicket t, String assigneeEmail) {
+    public IncidentTicket assign(IncidentTicket t, String assigneeEmail) {
         // scattered validation
         if (assigneeEmail != null && !assigneeEmail.contains("@")) {
             throw new IllegalArgumentException("assigneeEmail invalid");
         }
-        t.setAssigneeEmail(assigneeEmail);
+        return t.toBuilder().assigneeEmail(assigneeEmail).build();
     }
 }
